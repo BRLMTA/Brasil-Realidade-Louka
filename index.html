@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasil Realidade Louka</title>
+    <style>
+        /* Estilo Geral */
+        body {
+            background: url('fundo-animado.gif') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .logo img {
+            width: 50px;
+            margin-right: 15px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: #0ff;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .hero .ip {
+            font-weight: bold;
+            color: #0ff;
+        }
+
+        .buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #0ff;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .buttons button:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Brasil Realidade Louka">
+            <h1>Brasil Realidade Louka</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Bem-vindo ao Servidor</h2>
+            <p>Conecte-se: <span class="ip">mtasa://135.148.13.60:22053</span></p>
+            <div class="buttons">
+                <button onclick="loginDiscord()">Login com Discord</button>
+                <button onclick="location.href='loja.html'">Acessar Loja</button>
+                <button onclick="conectarServidor()">Conectar ao Servidor</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function loginDiscord() {
+            alert("Login com Discord ainda será implementado!");
+        }
+
+        function conectarServidor() {
+            alert("Conecte-se ao servidor usando o IP: mtasa://135.148.13.60:22053");
+        }
+    </script>
+</body>
+</html>
