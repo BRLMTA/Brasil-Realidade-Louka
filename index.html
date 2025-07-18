@@ -1,101 +1,358 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasil Realidade Louka</title>
+    <title>Brasil Realidade Louka - Servidor</title>
+
+    <!-- Link para a biblioteca de animações (AOS) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Estilos CSS Modernizados -->
     <style>
-        /* Estilo Geral */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        /* Estilos Gerais */
         body {
-            background: url('fundo-animado.gif') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000428; /* Fundo azul escuro sólido como fallback */
+            background: linear-gradient(to right, #000428, #004e92); /* Degradê azul */
             color: #fff;
+            font-family: 'Orbitron', sans-serif; /* Fonte com tema futurista */
+            overflow-x: hidden;
+        }
+
+        /* Canvas do Efeito de Partículas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Efeito de Raio/Onda no Clique */
+        .click-ray {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid #00e5ff;
+            box-shadow: 0 0 20px #00e5ff, inset 0 0 10px #00e5ff;
+            transform: translate(-50%, -50%);
+            animation: ray-animation 0.5s linear forwards;
+            pointer-events: none; /* Garante que o efeito não interfira nos cliques */
+            z-index: 9999;
+        }
+
+        @keyframes ray-animation {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(15);
+                opacity: 0;
+            }
+        }
+
+        /* Container Principal do Conteúdo */
+        .content-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Seções */
+        .section {
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 20px;
+            margin: 50px 0;
+            background: rgba(0, 20, 40, 0.7);
+            border: 1px solid #00a2ff;
+            border-radius: 10px;
+            backdrop-filter: blur(5px); /* Efeito de vidro fosco */
+            box-shadow: 0 0 25px rgba(0, 162, 255, 0.4);
+        }
+        
+        .main-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: none;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+        }
+
+        /* Logo do Servidor */
+        .server-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            border: 3px solid #00e5ff;
+            box-shadow: 0 0 20px #00e5ff;
+        }
+        
+        /* Título Principal com efeito Glitch Azulado */
+        .glitch {
+            font-size: clamp(2.5rem, 10vw, 5rem); /* Tamanho de fonte responsivo */
+            font-weight: 700;
+            color: white;
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(0, 229, 255, 0.75), -0.03em -0.04em 0 rgba(0, 78, 146, 0.75), 0.04em 0.04em 0 rgba(255, 0, 220, 0.5);
+            animation: glitch-animation 1s infinite;
             margin: 0;
         }
 
-        header {
+        @keyframes glitch-animation {
+          0% { text-shadow: 0.05em 0 0 rgba(0, 229, 255, 0.75), -0.03em -0.04em 0 rgba(0, 78, 146, 0.75), 0.04em 0.04em 0 rgba(255, 0, 220, 0.5); }
+          15% { text-shadow: -0.05em -0.02em 0 rgba(0, 229, 255, 0.75), 0.02em 0.03em 0 rgba(0, 78, 146, 0.75), -0.04em -0.03em 0 rgba(255, 0, 220, 0.5); }
+          49% { text-shadow: 0.02em 0.05em 0 rgba(0, 229, 255, 0.75), 0.05em 0 0 rgba(0, 78, 146, 0.75), 0 -0.05em 0 rgba(255, 0, 220, 0.5); }
+          100% { text-shadow: -0.02em 0 0 rgba(0, 229, 255, 0.75), -0.03em -0.02em 0 rgba(0, 78, 146, 0.75), -0.04em -0.02em 0 rgba(255, 0, 220, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #bdeaff;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(0, 162, 255, 0.8);
+        }
+
+        /* Botões de Ação */
+        .action-buttons {
+            margin-top: 30px;
             display: flex;
-            align-items: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
 
-        .logo img {
-            width: 50px;
-            margin-right: 15px;
+        .button {
+            text-decoration: none;
+            color: #00e5ff;
+            background: transparent;
+            border: 2px solid #00e5ff;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00e5ff;
+            box-shadow: inset 0 0 8px rgba(0, 229, 255, 0.6), 0 0 10px rgba(0, 229, 255, 0.4);
         }
 
-        .logo h1 {
-            font-size: 24px;
-            color: #0ff;
+        .button:hover {
+            background: #00e5ff;
+            color: #000428;
+            box-shadow: 0 0 30px #00e5ff;
+            text-shadow: none;
         }
 
-        .hero {
-            text-align: center;
-            padding: 100px 20px;
-            animation: fadeIn 2s ease-in-out;
+        /* Lista de Funcionalidades */
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+            text-align: left;
         }
 
-        .hero .ip {
-            font-weight: bold;
-            color: #0ff;
+        .features-list li {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            background: rgba(0, 78, 146, 0.4);
+            padding: 15px;
+            border-left: 4px solid #00e5ff;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
-        .buttons button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #0ff;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.3s;
+        .features-list li:hover {
+            transform: translateX(10px);
+            background: rgba(0, 229, 255, 0.3);
         }
 
-        .buttons button:hover {
-            background: #0ff;
-            color: #000;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        h2 {
+            font-size: 2.5rem;
+            color: #00e5ff;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #00e5ff;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Brasil Realidade Louka">
-            <h1>Brasil Realidade Louka</h1>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero">
-            <h2>Bem-vindo ao Servidor</h2>
-            <p>Conecte-se: <span class="ip">mtasa://135.148.13.60:22053</span></p>
-            <div class="buttons">
-                <button onclick="loginDiscord()">Login com Discord</button>
-                <button onclick="location.href='loja.html'">Acessar Loja</button>
-                <button onclick="conectarServidor()">Conectar ao Servidor</button>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="content-container">
+
+        <div class="main-section">
+            <!-- EDITE AQUI: Troque "images/logo.png" pelo caminho do seu logo -->
+            <img src="images/logo.png" alt="Logo Brasil Realidade Louka" class="server-logo" data-aos="zoom-in">
+            
+            <h1 class="glitch">Brasil Realidade Louka</h1>
+            <p class="subtitle" data-aos="fade-up" data-aos-delay="200">Uma nova dimensão de Roleplay espera por você.</p>
+
+            <div class="action-buttons" data-aos="fade-up" data-aos-delay="400">
+                <!-- EDITE AQUI: Coloque seu link de conexão -->
+                <a href="SEU_LINK_DE_CONEXAO_AQUI" class="button">CONECTAR AGORA</a>
+                <!-- EDITE AQUI: Coloque seu link do Discord -->
+                <a href="SEU_LINK_DO_DISCORD_AQUI" class="button">NOSSA COMUNIDADE</a>
             </div>
-        </section>
-    </main>
+        </div>
 
+        <div id="features" class="section">
+            <h2 data-aos="fade-down">Nossos Diferenciais</h2>
+            <ul class="features-list">
+                <li data-aos="fade-right" data-aos-delay="100">✅ Economia Realista e Balanceada</li>
+                <li data-aos="fade-right" data-aos-delay="200">✅ Facções e Organizações Exclusivas</li>
+                <li data-aos="fade-right" data-aos-delay="300">✅ Eventos Dinâmicos e Constantes</li>
+                <li data-aos="fade-right" data-aos-delay="400">✅ Veículos, Roupas e Itens Únicos</li>
+                <li data-aos="fade-right" data-aos-delay="500">✅ Desenvolvimento Ativo e Staff Presente</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-        function loginDiscord() {
-            alert("Login com Discord ainda será implementado!");
-        }
+      AOS.init({
+          duration: 1000,
+          once: true,
+      });
 
-        function conectarServidor() {
-            alert("Conecte-se ao servidor usando o IP: mtasa://135.148.13.60:22053");
-        }
+      // --- SCRIPT DO EFEITO DE RAIO NO CLIQUE ---
+      window.addEventListener('mousedown', function(event) {
+          // Cria o elemento do raio
+          const ray = document.createElement('div');
+          ray.className = 'click-ray';
+          document.body.appendChild(ray);
+
+          // Posiciona o raio no local do cursor
+          ray.style.left = event.clientX + 'px';
+          ray.style.top = event.clientY + 'px';
+
+          // Remove o elemento após a animação para não poluir a página
+          setTimeout(() => {
+              ray.remove();
+          }, 500); // 500ms é a duração da animação
+      });
+
+      // --- SCRIPT DO FUNDO DE PARTÍCULAS ---
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let particlesArray;
+
+      let mouse = { x: null, y: null, radius: (canvas.height / 80) * (canvas.width / 80) };
+
+      window.addEventListener('mousemove', function(event) {
+          mouse.x = event.x;
+          mouse.y = event.y;
+      });
+
+      class Particle {
+          constructor(x, y, directionX, directionY, size, color) {
+              this.x = x;
+              this.y = y;
+              this.directionX = directionX;
+              this.directionY = directionY;
+              this.size = size;
+              this.color = color;
+          }
+          draw() {
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+              ctx.fillStyle = '#00a2ff';
+              ctx.fill();
+          }
+          update() {
+              if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
+              if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
+              let dx = mouse.x - this.x;
+              let dy = mouse.y - this.y;
+              let distance = Math.sqrt(dx * dx + dy * dy);
+              if (distance < mouse.radius + this.size) {
+                  if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 5; }
+                  if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 5; }
+                  if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 5; }
+                  if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 5; }
+              }
+              this.x += this.directionX;
+              this.y += this.directionY;
+              this.draw();
+          }
+      }
+
+      function init() {
+          particlesArray = [];
+          let numberOfParticles = (canvas.height * canvas.width) / 9000;
+          for (let i = 0; i < numberOfParticles; i++) {
+              let size = (Math.random() * 2) + 1;
+              let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+              let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+              let directionX = (Math.random() * 0.4) - 0.2;
+              let directionY = (Math.random() * 0.4) - 0.2;
+              let color = '#00a2ff';
+              particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+          }
+      }
+
+      function connect() {
+          let opacityValue = 1;
+          for (let a = 0; a < particlesArray.length; a++) {
+              for (let b = a; b < particlesArray.length; b++) {
+                  let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                      ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                  if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                      opacityValue = 1 - (distance / 20000);
+                      ctx.strokeStyle = 'rgba(0,162,255,' + opacityValue + ')';
+                      ctx.lineWidth = 1;
+                      ctx.beginPath();
+                      ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                      ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                      ctx.stroke();
+                  }
+              }
+          }
+      }
+
+      function animate() {
+          requestAnimationFrame(animate);
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          for (let i = 0; i < particlesArray.length; i++) {
+              particlesArray[i].update();
+          }
+          connect();
+      }
+
+      window.addEventListener('resize', function() {
+          canvas.width = innerWidth;
+          canvas.height = innerHeight;
+          mouse.radius = ((canvas.height / 80) * (canvas.height / 80));
+          init();
+      });
+      window.addEventListener('mouseout', function(){
+          mouse.x = undefined;
+          mouse.y = undefined;
+      });
+
+      init();
+      animate();
     </script>
+
 </body>
 </html>
